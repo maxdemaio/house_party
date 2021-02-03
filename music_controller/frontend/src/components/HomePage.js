@@ -13,7 +13,15 @@ export default class HomePage extends Component{
         return (
             // Home page navigation w router
             <Router>
-                <p>This is the home page!</p>
+                <Switch>
+                    <Route exact path='/'>
+                        <p>This is the home page!</p>
+                    </Route>
+                    <Route path='/join' component={RoomJoinPage}>
+                    </Route>
+                    <Route path='/create' component={CreateRoomPage}>
+                    </Route>
+                </Switch>
             </Router>
         );
     }
