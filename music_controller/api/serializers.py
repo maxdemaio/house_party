@@ -11,3 +11,6 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('id', 'code', 'host',
             'guest_can_pause', 'votes_to_skip')
+
+class CreateRoomSerializer(serializers.ModelSerializer):
+    pass
