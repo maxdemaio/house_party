@@ -15,6 +15,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 export default class CreateRoomForm extends React.Component {
     constructor(props){
         super(props);
+        this.defaultVotes = 2;
         this.state = {
             guestCanPause: true,
             votesToSkip: this.defaultVotes,
@@ -22,6 +23,7 @@ export default class CreateRoomForm extends React.Component {
 
         this.handleVotesChange = this.handleVotesChange.bind(this);
         this.handleGuestCanPauseChange = this.handleGuestCanPauseChange.bind(this);
+        this.handleRoomButtonPressed = this.handleRoomButtonPressed.bind(this);
     }
 
     handleVotesChange(e) {
@@ -37,6 +39,25 @@ export default class CreateRoomForm extends React.Component {
             // If value is 'true' or 'false' update state's boolean val
             guestCanPause: e.target.value === 'true' ? true : false,
         })
+    }
+
+    handleRoomButtonPressed() {
+        // Send request to our backend API
+        // Allows us to create a room
+        // With values from state
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                // should match what we have in our serializer on backend
+                votes_to_skip: this.state.votesToSkip,
+                guest_can_pause: this.state.guestCanPause,
+            })
+        };
+
+        fetch('/api/create-room', requestOptions)
+            .then((response) => response.json())
+            .then((data) => console.log(data));
     }
 
     render(){
@@ -55,7 +76,7 @@ export default class CreateRoomForm extends React.Component {
                                     Guest Control of Playback State
                                 </div>
                             </FormHelperText>
-                            <RadioGroup row defaultValue="true">
+                            <RadioGroup row defaultValue="true" onChange={this.handleGuestCanPauseChange}>
                                 <FormControlLabel 
                                     value="true" 
                                     control={<Radio color="primary"/>}
@@ -80,6 +101,7 @@ export default class CreateRoomForm extends React.Component {
                                     min: 1,
                                     style: {textAlign: "center"}
                                 }}
+                                onChange={this.handleVotesChange}
                             />
                             <FormHelperText>
                                 <div align="center">Votes Required to Skip Song</div>
@@ -87,7 +109,11 @@ export default class CreateRoomForm extends React.Component {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <Button color="primary" variant="contained">Create a Room</Button>
+                        <Button 
+                        color="primary" variant="contained"
+                        onClick={this.handleRoomButtonPressed}>
+                            Create a Room
+                        </Button>
                     </Grid>
                     <Grid item xs={12}>
                         <Button color="secondary" variant="contained" to="/" component={Link}>
