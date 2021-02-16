@@ -57,7 +57,12 @@ export default class CreateRoomForm extends React.Component {
 
         fetch('/api/create-room', requestOptions)
             .then((response) => response.json())
-            .then((data) => console.log(data));
+            // Redirect user to the room's page
+            .then((data) => {
+                console.log(data.code);
+                console.log(this.props.history);
+                this.props.history.push("/room/" + data.code)
+            });
     }
 
     render(){

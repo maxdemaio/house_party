@@ -8,7 +8,9 @@ export default class CreateRoomPage extends Component{
 
     render(){
         return(
-            <CreateRoomForm></CreateRoomForm>
+            // Since history doesn't get passed into Children components from
+            // React router, we can pass it as props so we can redirect
+            <CreateRoomForm history={this.props.history}></CreateRoomForm>
         );
     }
 }
