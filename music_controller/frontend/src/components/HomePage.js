@@ -4,12 +4,8 @@ import CreateRoomPage from "./CreateRoomPage";
 import Room from './Room';
 
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
+  BrowserRouter as Router, Switch, Route, Link,
+  Redirect,} from "react-router-dom";
 
 export default class HomePage extends Component {
   constructor(props) {

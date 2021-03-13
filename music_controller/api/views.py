@@ -37,9 +37,9 @@ class GetRoom(APIView):
 
 
 class JoinRoom(APIView):
+    """ Have a user to join a room """
     lookup_url_kwarg = 'code'
 
-    """ Have a user to join a room """
     def post(self, request, format=None):
         # Create session
         if not self.request.session.exists(self.request.session.session_key):
