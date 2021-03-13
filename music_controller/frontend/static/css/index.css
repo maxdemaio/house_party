@@ -1,4 +1,11 @@
+/* Palette: https://coolors.co/eaefbd-c9e3ac-90be6d-ea9010-37371f */
+
 /* My CSS */
 body {
-    background-color: #e0ebe4;
+    background-color: #EAEFBD;
+    margin: 0px;
+}
+
+.housePartyIcon {
+    margin-right: 5px;
 }

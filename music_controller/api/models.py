@@ -11,7 +11,7 @@ def generate_unique_code():
             break
     return code
 
-# Create your models here.
+
 class Room(models.Model):
     code = models.CharField(max_length=8, default=generate_unique_code, unique=True)
     # We will use sessions to define the host

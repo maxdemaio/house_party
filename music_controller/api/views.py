@@ -4,6 +4,8 @@ from .serializers import RoomSerializer, CreateRoomSerializer
 from .models import Room
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse
+
 
 class RoomView(generics.ListAPIView):
     """ Return all rooms """
@@ -93,3 +95,20 @@ class CreateRoom(APIView):
                 self.request.session['room_code'] = room.code
             
             return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+
+
+class UserInRoom(APIView):
+    """Endpoint to check if current user (with session) is in a room
+        This way when a user re-visits the home page
+        they are directed to their room"""
+    def get(self, request, format=None):
+        # Check memory for session of host
+        if not self.request.session.exists(self.request.session.session_key):
+            # Create session
+            self.request.session.create()
+        data = {
+            'code': self.request.session.get('room_code')
+        }
+
+        # Serialize our data
+        return JsonResponse(data, status=status.HTTP_200_OK)

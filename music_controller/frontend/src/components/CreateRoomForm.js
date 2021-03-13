@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-dom/Link';
 // Material UI imports
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -122,7 +122,7 @@ export default class CreateRoomForm extends React.Component {
                     </Grid>
                     <Grid item xs={12}>
                         <Button color="secondary" variant="contained" to="/" component={Link}>
-                            Back
+                            Back Home
                         </Button>
                     </Grid>
                 </Grid>

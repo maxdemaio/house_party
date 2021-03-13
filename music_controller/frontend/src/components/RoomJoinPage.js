@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-dom/Link';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-
+import ButtonAppBar from "./ButtonAppBar";
 
 export default class RoomJoinPage extends Component{
     constructor(props){
@@ -49,6 +49,8 @@ export default class RoomJoinPage extends Component{
 
     render(){
         return (
+            <div>
+            <ButtonAppBar />
             <Grid container spacing={1} align="center">
                 <Grid item xs={12}>
                     <Typography variant="h4" component="h4">
@@ -72,11 +74,12 @@ export default class RoomJoinPage extends Component{
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="secondary" to="/" component={Link}>
-                        Back
+                    <Button color="secondary" variant="contained" to="/" component={Link}>
+                        Back Home
                     </Button>
                 </Grid>
             </Grid>
+            </div>
         );
     }
 }
