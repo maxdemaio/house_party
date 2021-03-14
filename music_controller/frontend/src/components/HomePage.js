@@ -19,6 +19,8 @@ export default class HomePage extends Component {
     this.state = {
       roomCode: null,
     };
+
+    this.clearRoomCode = this.clearRoomCode.bind(this);
   }
 
   async componentDidMount() {
@@ -56,6 +58,12 @@ export default class HomePage extends Component {
     );
   }
 
+  clearRoomCode() {
+    this.setState({
+      roomCode: null,
+    })
+  }
+
   render() {
     return (
       <Router>
@@ -74,7 +82,13 @@ export default class HomePage extends Component {
           />
           <Route path="/join" component={RoomJoinPage} />
           <Route path="/create" component={CreateRoomPage} />
-          <Route path="/room/:roomCode" component={Room} />
+          <Route path="/room/:roomCode" render={(props) => {
+            // Take all props and pass them into our Room component
+            // Passing method to room component
+            // When the room component calls this method, it can modify the parent
+            // Parent in this case in the HomePage (change roomcode in parent)
+            return <Room {...props} leaveRoomCallback={this.clearRoomCode} />
+          }} />
         </Switch>
       </Router>
     );

@@ -112,3 +112,22 @@ class UserInRoom(APIView):
 
         # Serialize our data
         return JsonResponse(data, status=status.HTTP_200_OK)
+
+
+class LeaveRoom(APIView):
+    """Allow user to leave current room they are in"""
+    def post(self, request, format=None):
+        # Remove code from user's session
+        if 'room_code' in self.request.session:
+            self.request.session.pop('room_code')
+            # Check if that user was a host
+            # Obtain their session key and check if they are a host 
+            host_id = self.request.session.session_key
+            room_results = Room.objects.filter(host=host_id)
+            # Delete that room if the host leaves it
+            if len(room_results) > 0:
+                room = room_results[0]
+                room.delete()
+
+        return Response({'Message': 'Success'}, status=status.HTTP_200_OK)
+        
