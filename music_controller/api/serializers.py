@@ -19,3 +19,17 @@ class CreateRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = ('guest_can_pause', 'votes_to_skip')
+
+
+class UpdateRoomSerializer(serializers.ModelSerializer):
+    # Make sure no error with unique room codes
+    # If unique is true, it won't let us pass a code that's not unique
+    # To the serializer, so we re-define it
+    # code now references this field
+    code = serializers.CharField(validators=[])
+
+    # Serialize request 'updateroom' moreso outgoing
+    # Make sure patch request data is valid to Model fields
+    class Meta:
+        model = Room
+        fields = ('guest_can_pause', 'votes_to_skip', 'code')
