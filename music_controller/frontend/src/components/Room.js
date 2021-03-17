@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Grid, Button, Typography } from "@material-ui/core";
 import ButtonAppBar from "./ButtonAppBar";
-
+import CreateRoomForm from "./CreateRoomForm";
 
 export default class Room extends Component{
     constructor(props){
@@ -11,12 +11,16 @@ export default class Room extends Component{
             votesToSkip: 2,
             guestCanPause: false,
             isHost: false,
+            showSettings: false,
         };
         // Match prop stores how we got to this component from Router
         this.roomCode = this.props.match.params.roomCode;
         // Bind this to our functions so we can access it
         this.getRoomDetails = this.getRoomDetails.bind(this);
         this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
+        this.updateShowSettings = this.updateShowSettings.bind(this);
+        this.renderSettings = this.renderSettings.bind(this);
+        this.renderSettingsButton = this.renderSettingsButton.bind(this);
 
         // Call once everything is constructed
         // Starts with defaults and then gets populated
@@ -27,7 +31,7 @@ export default class Room extends Component{
         fetch('/api/get-room' + '?code=' + this.roomCode)
             // Make sure we get a valid response and update state
             .then((response) => {
-                if (!reponse.ok) {
+                if (!response.ok) {
                     // Leave room if not valid
                     this.props.leaveRoomCallback();
                     this.props.push.history.push("/");
@@ -57,7 +61,54 @@ export default class Room extends Component{
         });
     }
 
+    updateShowSettings(value) {
+        this.setState({
+            showSettings: value,
+        });
+    }
+
+    renderSettings() {
+        return (
+            <Grid container spacing={1}>
+                <Grid item xs={12} align="center">
+                    <CreateRoomForm
+                        update={true}
+                        votesToSkip={this.state.votesToSkip}
+                        guestCanPause={this.state.guestCanPause}
+                        roomCode={this.roomCode}
+                        updateCallback={this.getRoomDetails}
+                    />
+                </Grid>
+                <Grid item xs={12} align="center">
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => this.updateShowSettings(false)}
+                    >
+                        Close
+                    </Button>
+                </Grid>
+            </Grid>
+        );
+    }
+
+
+    // Only show settings button if user is host
+    renderSettingsButton() {
+        return (
+            <Grid item xs={12} align="center">
+                <Button variant="contained" color="primary" onClick={() => this.updateShowSettings(true)}>
+                    Settings
+                </Button>
+            </Grid>
+        );
+    }
+
     render() {
+        if (this.state.showSettings) {
+            return this.renderSettings();
+        }
+
         return (
             <div>
                 <ButtonAppBar />
@@ -82,6 +133,7 @@ export default class Room extends Component{
                             Guests Can Pause: {this.state.guestCanPause.toString()}
                         </Typography>
                     </Grid>
+                    {this.state.isHost ? this.renderSettingsButton() : null}
                     <Grid item xs={12}>
                         <Button color="secondary" variant="contained" onClick={this.leaveButtonPressed}>
                             Leave Room
