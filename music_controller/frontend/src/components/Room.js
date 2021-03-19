@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Grid, Button, Typography } from "@material-ui/core";
 import ButtonAppBar from "./ButtonAppBar";
-import CreateRoomForm from "./CreateRoomForm";
+import CreateRoomPage from "./CreateRoomPage";
 
 export default class Room extends Component{
     constructor(props){
@@ -69,9 +69,10 @@ export default class Room extends Component{
 
     renderSettings() {
         return (
+            
             <Grid container spacing={1}>
-                <Grid item xs={12} align="center">
-                    <CreateRoomForm
+                <Grid item xs={12}>
+                    <CreateRoomPage
                         update={true}
                         votesToSkip={this.state.votesToSkip}
                         guestCanPause={this.state.guestCanPause}
