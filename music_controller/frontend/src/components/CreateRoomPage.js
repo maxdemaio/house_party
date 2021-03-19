@@ -46,6 +46,24 @@ export default class CreateRoomPage extends React.Component {
     }
 
 
+    // Get our CSRF Token from cookies
+    getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
     handleVotesChange(e) {
         // Object that called func (e)
         // Update votes to skip on change of textfield
@@ -67,9 +85,17 @@ export default class CreateRoomPage extends React.Component {
         // Send request to our backend API
         // Allows us to create a room
         // With values from state
+
+        // Obtain CSRF token from cookies
+        const csrftoken = this.getCookie('csrftoken');
+        
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
             body: JSON.stringify({
                 // should match what we have in our serializer on backend
                 votes_to_skip: this.state.votesToSkip,
@@ -91,9 +117,17 @@ export default class CreateRoomPage extends React.Component {
     handleUpdateButtonPressed() {
         // Send request to our backend API
         // Allows us to update a room
+
+        // Obtain CSRF token from cookies
+        const csrftoken = this.getCookie('csrftoken');
+
         const requestOptions = {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
             body: JSON.stringify({
                 votes_to_skip: this.state.votesToSkip,
                 guest_can_pause: this.state.guestCanPause,
