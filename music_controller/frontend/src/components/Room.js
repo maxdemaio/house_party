@@ -77,6 +77,7 @@ export default class Room extends Component{
                         votesToSkip={this.state.votesToSkip}
                         guestCanPause={this.state.guestCanPause}
                         roomCode={this.roomCode}
+                        // Update room with correct state (curr vals per backend)
                         updateCallback={this.getRoomDetails}
                     />
                 </Grid>

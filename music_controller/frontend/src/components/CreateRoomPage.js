@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ButtonAppBar from './ButtonAppBar';
 import Collapse from "@material-ui/core/Collapse";
+import Alert from "@material-ui/lab/Alert";
 
 /* 
 Note: history doesn't get passed into Children components from 
@@ -144,6 +145,7 @@ export default class CreateRoomPage extends React.Component {
                     errorMsg: "Error updating room...",
                 });
             }
+            // Callback function to update state
             this.props.updateCallback();
         });
     }
@@ -195,7 +197,16 @@ export default class CreateRoomPage extends React.Component {
                     <Grid item xs={12}>
                         {/* Check for update messages in state */}
                         <Collapse in={this.state.errorMsg != "" || this.state.successMsg != ""}>
-                            {this.state.successMsg}
+                            {this.state.successMsg != "" ? (<Alert 
+                                severity="success" 
+                                onClose={() => {this.setState({successMsg: ""});}}>
+                                    {this.state.successMsg}
+                                </Alert>) : 
+                                (<Alert 
+                                    severity="error"
+                                    onClose={() => { this.setState({ errorMsg: "" }); }}>
+                                        {this.state.errorMsg}
+                                </Alert>)}
                         </Collapse>
                     </Grid>
                     <Grid item xs={12}>
@@ -210,7 +221,9 @@ export default class CreateRoomPage extends React.Component {
                                     Guest Control of Playback State
                                 </div>
                             </FormHelperText>
-                            <RadioGroup row defaultValue="true" onChange={this.handleGuestCanPauseChange}>
+                            <RadioGroup row 
+                                defaultValue={this.props.guestCanPause.toString()} 
+                                onChange={this.handleGuestCanPauseChange}>
                                 <FormControlLabel
                                     value="true"
                                     control={<Radio color="primary" />}
