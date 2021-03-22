@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
+import sys
+sys.path.append("..")  # Adds higher directory to python modules path.
+import config # For our environment variables
 from pathlib import Path
-# Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
