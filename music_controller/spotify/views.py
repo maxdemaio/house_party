@@ -7,6 +7,10 @@ from requests import Request, post
 from .util import update_or_create_user_tokens, is_spotify_authenticated
 from django.shortcuts import redirect
 
+# Import Room model for now to delete room
+from django.apps import apps
+Room = apps.get_model('api', 'Room')
+
 
 class AuthURL(APIView):
     """Return URL we can use to authenticate our application"""
@@ -31,6 +35,24 @@ def spotify_callback(request, format=None):
         obtain access/refresh token"""
     code = request.GET.get('code')
     error = request.GET.get('error')
+    print(error)
+    print(type(error))
+
+    # User cancels or the Spotify access was denied
+    if error == "access_denied":
+        # TODO display an error and allow them to try and re-authenticate
+        # For now: Remove code from user's session
+        if 'room_code' in request.session:
+            request.session.pop('room_code')
+            # Check if that user was a host
+            # Obtain their session key and check if they are a host
+            host_id = request.session.session_key
+            room_results = Room.objects.filter(host=host_id)
+            # Delete that room if the host leaves it
+            if len(room_results) > 0:
+                room = room_results[0]
+                room.delete()
+        return redirect("frontend:")
 
     # Callback request
     response = post('https://accounts.spotify.com/api/token',
