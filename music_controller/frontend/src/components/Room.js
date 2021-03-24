@@ -13,7 +13,9 @@ export default class Room extends Component{
             guestCanPause: false,
             isHost: false,
             showSettings: false,
+            spotifyAuthenticated: false,
         };
+
         // Match prop stores how we got to this component from Router
         this.roomCode = this.props.match.params.roomCode;
         // Bind this to our functions so we can access it
@@ -22,11 +24,33 @@ export default class Room extends Component{
         this.updateShowSettings = this.updateShowSettings.bind(this);
         this.renderSettings = this.renderSettings.bind(this);
         this.renderSettingsButton = this.renderSettingsButton.bind(this);
+        this.authenticateSpotify = this.authenticateSpotify.bind(this);
 
         // Call once everything is constructed
         // Starts with defaults and then gets populated
         this.getRoomDetails();
     }
+
+
+    authenticateSpotify() {
+        // Send request to backend to check if current user is authenticated
+        fetch('/spotify/is-authenticated').then((response) => response.json())
+            .then((data) => {
+                this.setState({
+                    spotifyAuthenticated: data.status
+                });
+                if (!data.status) {
+                    // Host is not authenticated yet
+                    fetch('/spotify/get-auth-url').then((response) => response.json())
+                        .then((data) => {
+                            // Redir to spotify auth page
+                            // Afterwards our spotify callback function is called
+                            window.location.replace(data.url);
+                    })
+                }
+        });
+    }
+
 
     getRoomDetails() {
         fetch('/api/get-room' + '?code=' + this.roomCode)
@@ -45,6 +69,11 @@ export default class Room extends Component{
                     guestCanPause: data.guest_can_pause,
                     isHost: data.is_host,
                 })
+                if (this.state.isHost) {
+                    // Only send request if the user is a host of the room
+                    // Wait until getRoomDetails has run (end of thens)
+                    this.authenticateSpotify();
+                }
             })
     }
 
