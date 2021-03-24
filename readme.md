@@ -1,6 +1,15 @@
 # House Party
 Collaborative music playing system built with React and Django
 
+## Structure
+
+| Codebase             |      Description      |
+| :------------------- | :-------------------: |
+| [api](music_controller/api)           |      Django REST API  |
+| [spotify](music_controller/spotify)   |      Spotify API      |
+| [frontend](music_controller/frontend) |    React frontend     |
+
+
 ## Django REST backend
 
 The API was constructed with the Django REST framework. With fetch calls from the frontend to the backend API (through the `api/` URLs) we can obtain create/read/update/delete room information.
