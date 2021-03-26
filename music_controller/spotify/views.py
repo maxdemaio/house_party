@@ -4,8 +4,10 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from requests import Request, post
-from .util import update_or_create_user_tokens, is_spotify_authenticated
+from .util import update_or_create_user_tokens, is_spotify_authenticated, execute_spotify_api_request
 from django.shortcuts import redirect
+
+
 
 # Import Room model for now to delete room
 from django.apps import apps
@@ -34,9 +36,8 @@ def spotify_callback(request, format=None):
     """Get code / state after access authorized
         obtain access/refresh token"""
     code = request.GET.get('code')
+    # Print out error if we are receiving one
     error = request.GET.get('error')
-    print(error)
-    print(type(error))
 
     # User cancels or the Spotify access was denied
     if error == "access_denied":
@@ -84,5 +85,58 @@ def spotify_callback(request, format=None):
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
         """Call util function and check if authenticated, return JSON"""
-        is_authenticated = is_spotify_authenticated(self.request.session.session_key)
+        is_authenticated = is_spotify_authenticated(
+            self.request.session.session_key)
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
+
+
+class CurrentSong(APIView):
+    def get(self, request, format=None):
+        """Return information about currently playing song"""
+        # Use room code to figure who host/guests are
+        room_code = self.request.session.get('room_code')
+        room = Room.objects.filter(code=room_code)
+        if room.exists():
+            room = room[0]
+        else:
+            return Response({}, status.status.HTTP_404_NOT_FOUND)
+
+        host = room.host
+        endpoint = "player/currently-playing"
+
+        # Session ID (host), with endpoint
+        response = execute_spotify_api_request(host, endpoint)
+        print(response)
+        
+        # No song information error from request
+        if 'error' in response or 'item' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        
+        item = response.get('item')
+        duration = item.get('duration_ms')
+        progress = response.get('progress_ms')
+        album_cover = item.get('album').get('images')[0].get('url')
+        is_playing = response.get('is_playing')
+        song_id = item.get('id')
+
+        # Clean up artist / multiple artists
+        artist_string = ""
+        for index, artist in enumerate(item.get('artists')):
+            if index > 0:
+                artist_string += ", "
+            name = artist.get('name')
+            artist_string += name
+
+        # All song information to send to the frontend
+        song = {
+            'title': item.get('name'),
+            'artist': artist_string,
+            'duration': duration,
+            'time': progress,
+            'image_url': album_cover,
+            'is_playing': is_playing,
+            'votes': 0,
+            'id': song_id
+        }
+
+        return Response(song, status=status.HTTP_200_OK)

@@ -5,9 +5,9 @@ Collaborative music playing system built with React and Django
 
 | Codebase             |      Description      |
 | :------------------- | :-------------------: |
-| [api](music_controller/api)           |      Django REST API  |
-| [spotify](music_controller/spotify)   |      Spotify API      |
-| [frontend](music_controller/frontend) |    React frontend     |
+| [api](music_controller/api) | Django REST API  |
+| [spotify](music_controller/spotify) | Spotify API      |
+| [frontend](music_controller/frontend) | React frontend   |
 
 
 ## Django REST backend

@@ -14,6 +14,7 @@ export default class Room extends Component{
             isHost: false,
             showSettings: false,
             spotifyAuthenticated: false,
+            song: {},
         };
 
         // Match prop stores how we got to this component from Router
@@ -25,30 +26,59 @@ export default class Room extends Component{
         this.renderSettings = this.renderSettings.bind(this);
         this.renderSettingsButton = this.renderSettingsButton.bind(this);
         this.authenticateSpotify = this.authenticateSpotify.bind(this);
+        this.getCurrentSong = this.getCurrentSong.bind(this);
 
         // Call once everything is constructed
         // Starts with defaults and then gets populated
         this.getRoomDetails();
     }
 
+    // Use short polling to check for updates
+    // Call every one second
+    componentDidMount() {
+        this.interval = setInterval(this.getCurrentSong, 1000);
+    }
+
+    // Close interval on destruction of component
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    getCurrentSong() {
+        fetch("/spotify/current-song")
+            .then((response) => {
+                if (!response.ok) {
+                    return {};
+                } else {
+                    return response.json();
+                }
+            })
+            .then((data) => {
+                this.setState({ song: data });
+                console.log(data);
+            });
+    }
+
 
     authenticateSpotify() {
         // Send request to backend to check if current user is authenticated
-        fetch('/spotify/is-authenticated').then((response) => response.json())
+        fetch("/spotify/is-authenticated")
+            .then((response) => response.json())
             .then((data) => {
-                this.setState({
-                    spotifyAuthenticated: data.status
-                });
+                this.setState({ spotifyAuthenticated: data.status });
+                console.log("Spotify Authenticated?", data.status);
+
+                // Host is not authenticated yet
                 if (!data.status) {
-                    // Host is not authenticated yet
-                    fetch('/spotify/get-auth-url').then((response) => response.json())
+                    fetch("/spotify/get-auth-url")
+                        .then((response) => response.json())
                         .then((data) => {
                             // Redir to spotify auth page
                             // Afterwards our spotify callback function is called
                             window.location.replace(data.url);
-                    })
+                        });
                 }
-        });
+            });
     }
 
 
@@ -150,6 +180,7 @@ export default class Room extends Component{
                             Code: {this.roomCode}
                         </Typography>
                     </Grid>
+                    
                     <Grid item xs={12}>
                         <Typography variant="h5" component="h5">
                             Host: {this.state.isHost.toString()}
