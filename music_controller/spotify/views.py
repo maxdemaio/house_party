@@ -148,7 +148,6 @@ class PauseSong(APIView):
         # Use room code to figure who host/guests are
         room_code = self.request.session.get('room_code')
         room = Room.objects.filter(code=room_code)
-
         if room.exists():
             room = room[0]
         else:
@@ -157,17 +156,17 @@ class PauseSong(APIView):
         # Check if pause available for host/guest
         if self.request.session.session_key == room.host or room.guest_can_pause:
             pause_song(room.host)
-            return Response({"Message": "Song paused"}, status=status.HTTP_204_NO_CONTENT)
-        return Response({"Message": "Pausing not allowed"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
 
 
 class PlaySong(APIView):
     def put(self, response, format=None):
-        """Update state of song to be paused, make sure permission is allowed"""
+        """Update state of song to be played, make sure permission is allowed"""
         # Use room code to figure who host/guests are
         room_code = self.request.session.get('room_code')
         room = Room.objects.filter(code=room_code)
-
         if room.exists():
             room = room[0]
         else:
@@ -176,5 +175,6 @@ class PlaySong(APIView):
         # Check if pause available for host/guest
         if self.request.session.session_key == room.host or room.guest_can_pause:
             play_song(room.host)
-            return Response({"Message": "Song paused"}, status=status.HTTP_204_NO_CONTENT)
-        return Response({"Message": "Pausing not allowed"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
