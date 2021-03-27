@@ -63,6 +63,7 @@ def refresh_spotify_token(session_id):
 
     response = post('https://accounts.spotify.com/api/token', data = {
         'grant_type': 'refresh_token',
+        # Refresh token stays consistent for user throughout its life in DB
         'refresh_token': refresh_token,
         'client_id': SPOTIFY_CLIENTID,
         'client_secret': SPOTIFY_CLIENTSECRET
@@ -72,7 +73,6 @@ def refresh_spotify_token(session_id):
     access_token = response.get('access_token')
     token_type = response.get('token_type')
     expires_in = response.get('expires_in')
-    refresh_token = response.get('refresh_token')
 
     # Update our database for that user
     update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
@@ -98,3 +98,11 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
         print(response)
         # Note: 204 error will be returned if no song is playing
         return {'Error': 'Issue with request'}
+
+
+def play_song(session_id):
+    return execute_spotify_api_request(session_id, "player/play", _put=True)
+
+
+def pause_song():
+    return execute_spotify_api_request(session_id, "player/pause", _put=True)
