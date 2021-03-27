@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Grid, Button, Typography } from "@material-ui/core";
 import ButtonAppBar from "./ButtonAppBar";
 import CreateRoomPage from "./CreateRoomPage";
-
+import MusicPlayer from "./MusicPlayer";
 
 export default class Room extends Component{
     constructor(props){
@@ -180,6 +180,10 @@ export default class Room extends Component{
                             Code: {this.roomCode}
                         </Typography>
                     </Grid>
+
+                    <Grid item xs={12}>
+                        <MusicPlayer {...this.state.song} />
+                    </Grid>
                     
                     <Grid item xs={12}>
                         <Typography variant="h5" component="h5">
@@ -203,6 +207,7 @@ export default class Room extends Component{
                     </Button>
                     </Grid>
                 </Grid>
+                
             </div>
         )
     }
