@@ -115,6 +115,7 @@ class CurrentSong(APIView):
         item = response.get('item')
         duration = item.get('duration_ms')
         progress = response.get('progress_ms')
+        # Album image, 640 by 640 pixels
         album_cover = item.get('album').get('images')[0].get('url')
         is_playing = response.get('is_playing')
         song_id = item.get('id')
@@ -136,7 +137,9 @@ class CurrentSong(APIView):
             'image_url': album_cover,
             'is_playing': is_playing,
             'votes': 0,
-            'id': song_id
+            'id': song_id,
+            # Check if song is playing
+            'song': True
         }
 
         return Response(song, status=status.HTTP_200_OK)

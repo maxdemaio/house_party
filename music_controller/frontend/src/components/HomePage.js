@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import RoomJoinPage from "./RoomJoinPage";
 import CreateRoomPage from "./CreateRoomPage";
 import Room from "./Room";
-import { Grid, Button, ButtonGroup, Typography } from "@material-ui/core";
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {
   BrowserRouter as Router,
   Switch,
@@ -37,7 +40,11 @@ export default class HomePage extends Component {
     return (
       <div>
       <ButtonAppBar />
-      <Grid container spacing={3} align="center">
+        <Grid container style={{
+          margin: 0,
+          width: '100%',
+        }}
+          spacing={1} align="center">
         <Grid item xs={12}>
           <Typography variant="h3" compact="h3">
             Welcome to House Party

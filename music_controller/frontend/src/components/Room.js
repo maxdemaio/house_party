@@ -1,9 +1,12 @@
 // Main landing page for a new room
 import React, { Component } from 'react';
-import { Grid, Button, Typography } from "@material-ui/core";
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import ButtonAppBar from "./ButtonAppBar";
 import CreateRoomPage from "./CreateRoomPage";
 import MusicPlayer from "./MusicPlayer";
+
 
 export default class Room extends Component{
     constructor(props){
@@ -14,7 +17,11 @@ export default class Room extends Component{
             isHost: false,
             showSettings: false,
             spotifyAuthenticated: false,
-            song: {},
+            song: {
+                title: 'No Song Currently Playing',
+                artist: 'N/A',
+                song: false,
+            },
         };
 
         // Match prop stores how we got to this component from Router
@@ -128,28 +135,32 @@ export default class Room extends Component{
 
     renderSettings() {
         return (
-            
-            <Grid container spacing={1}>
-                <Grid item xs={12}>
-                    <CreateRoomPage
-                        update={true}
-                        votesToSkip={this.state.votesToSkip}
-                        guestCanPause={this.state.guestCanPause}
-                        roomCode={this.roomCode}
-                        // Update room with correct state (curr vals per backend)
-                        updateCallback={this.getRoomDetails}
-                    />
+            <div>
+                <CreateRoomPage
+                    update={true}
+                    votesToSkip={this.state.votesToSkip}
+                    guestCanPause={this.state.guestCanPause}
+                    roomCode={this.roomCode}
+                    // Update room with correct state (curr vals per backend)
+                    updateCallback={this.getRoomDetails}
+                />
+
+                <Grid container style={{
+                    margin: 0,
+                    width: '100%',
+                }}
+                    spacing={1} align="center">
+                    <Grid item xs={12} align="center">
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => this.updateShowSettings(false)}
+                        >
+                            Close
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} align="center">
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => this.updateShowSettings(false)}
-                    >
-                        Close
-                    </Button>
-                </Grid>
-            </Grid>
+            </div>
         );
     }
 
@@ -157,7 +168,7 @@ export default class Room extends Component{
     // Only show settings button if user is host
     renderSettingsButton() {
         return (
-            <Grid item xs={12} align="center">
+            <Grid item xs={12}>
                 <Button variant="contained" color="primary" onClick={() => this.updateShowSettings(true)}>
                     Settings
                 </Button>
@@ -173,32 +184,39 @@ export default class Room extends Component{
         return (
             <div>
                 <ButtonAppBar />
-                <Grid container spacing={1} align="center">
-                    <Grid item xs={12}>
-                        <Typography variant="h5" component="h5">
-                            Code: {this.roomCode}
-                        </Typography>
-                    </Grid>
-
+                <Grid container style={{
+                    margin: 0,
+                    width: '100%',
+                    }}
+                    spacing={1} align="center">
                     <Grid item xs={12}>
                         <MusicPlayer {...this.state.song} />
                     </Grid>
+
+                    <Grid item xs={12}>
+                        <div>
+                            <Typography variant="h5" component="h5">
+                                Code: {this.roomCode}
+                            </Typography>
+                        </div>
+                        
+                        <div>
+                            <Typography variant="h5" component="h5">
+                                Host: {this.state.isHost.toString()}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography variant="h5" component="h5">
+                                Votes: {this.state.votesToSkip}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography variant="h5" component="h5">
+                                Guests Can Pause: {this.state.guestCanPause.toString()}
+                            </Typography>
+                        </div>
+                    </Grid>
                     
-                    <Grid item xs={12}>
-                        <Typography variant="h5" component="h5">
-                            Host: {this.state.isHost.toString()}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h5" component="h5">
-                            Votes: {this.state.votesToSkip}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h5" component="h5">
-                            Guests Can Pause: {this.state.guestCanPause.toString()}
-                        </Typography>
-                    </Grid>
                     {this.state.isHost ? this.renderSettingsButton() : null}
                     <Grid item xs={12}>
                         <Button color="secondary" variant="contained" onClick={this.leaveButtonPressed}>

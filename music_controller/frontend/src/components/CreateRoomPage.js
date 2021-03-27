@@ -193,7 +193,11 @@ export default class CreateRoomPage extends React.Component {
         return (
             <div>
                 <ButtonAppBar />
-                <Grid container spacing={1} align="center">
+                <Grid container style={{
+                    margin: 0,
+                    width: '100%',
+                }}
+                    spacing={1} align="center">
                     <Grid item xs={12}>
                         {/* Check for update messages in state */}
                         <Collapse in={this.state.errorMsg != "" || this.state.successMsg != ""}>

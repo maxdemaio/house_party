@@ -8,7 +8,9 @@ import Card from "@material-ui/core/Card";
 import PlayArrow from "@material-ui/icons/PlayArrow";
 import SkipNext from "@material-ui/icons/SkipNext";
 import Pause from "@material-ui/icons/Pause";
-import { LinearProgress } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import MusicOffIcon from '@material-ui/icons/MusicOff';
+import MusicNoteIcon from '@material-ui/icons/MusicNote';
 
 
 export default class MusicPlayer extends Component {
@@ -45,9 +47,10 @@ export default class MusicPlayer extends Component {
                     <Grid item xs={4}>
                         <img src={this.props.image_url} height="100%" width="100%"></img>
                     </Grid>
+                    
                     <Grid item xs={8}>
                         <Typography component="h5" variant="h5">
-                            {this.props.title}
+                            {this.props.song ? <MusicNoteIcon /> : <MusicOffIcon />} {this.props.title}
                         </Typography>
                         <Typography color="textSecondary" variant="subtitle1">
                             {this.props.artist}
