@@ -14,6 +14,8 @@ import {
   Redirect,
 } from "react-router-dom";
 import ButtonAppBar from "./ButtonAppBar";
+import Info from "./Info";
+
 
 
 export default class HomePage extends Component {
@@ -51,9 +53,12 @@ export default class HomePage extends Component {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <ButtonGroup disableElevation variant="contained" color="primary">
+            <ButtonGroup disableElevation variant="contained">
             <Button color="primary" to="/join" component={Link}>
               Join a Room
+            </Button>
+            <Button color="default" to="/info" component={Link}>
+                Information
             </Button>
             <Button color="secondary" to="/create" component={Link}>
               Create a Room
@@ -88,6 +93,7 @@ export default class HomePage extends Component {
             }}
           />
           <Route path="/join" component={RoomJoinPage} />
+          <Route path="/info" component={Info} />
           <Route path="/create" component={CreateRoomPage} />
           <Route path="/room/:roomCode" render={(props) => {
             // Take all props and pass them into our Room component

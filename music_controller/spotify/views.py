@@ -108,7 +108,7 @@ class CurrentSong(APIView):
         if room.exists():
             room = room[0]
         else:
-            return Response({}, status.status.HTTP_404_NOT_FOUND)
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
         host = room.host
         endpoint = "player/currently-playing"
@@ -167,7 +167,7 @@ class PauseSong(APIView):
         if room.exists():
             room = room[0]
         else:
-            return Response({}, status.status.HTTP_404_NOT_FOUND)
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if pause available for host/guest
         if self.request.session.session_key == room.host or room.guest_can_pause:
@@ -186,7 +186,7 @@ class PlaySong(APIView):
         if room.exists():
             room = room[0]
         else:
-            return Response({}, status.status.HTTP_404_NOT_FOUND)
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if pause available for host/guest
         if self.request.session.session_key == room.host or room.guest_can_pause:
@@ -203,7 +203,7 @@ class SkipSong(APIView):
         if room.exists():
             room = room[0]
         else:
-            return Response({}, status.status.HTTP_404_NOT_FOUND)
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
         votes = Vote.objects.filter(room=room, song_id=room.current_song)
         votes_needed = room.votes_to_skip
@@ -218,4 +218,4 @@ class SkipSong(APIView):
             vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song)
             vote.save()
         
-        return Response({}, status.HTTP_204_NO_CONTENT)
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
